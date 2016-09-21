@@ -44,6 +44,7 @@
 
 ;;; Code:
 
+;; No add multiple files yet.
 (defun amarok-dired-add-files ()
   "Add marked files to Amarok playlist."
   (interactive)
@@ -56,14 +57,18 @@
 (defun amarok-dired-play-current-file ()
   "Play current file in Amarok."
   (interactive)
-  (shell-command
-   (format "dcop amarok playlist playMedia \"%s\"" (dired-get-filename))))
+  (amarok-tracklist
+    (format "org.freedesktop.MediaPlayer.AddTrack %s true" (dired-get-filename))))
 
-(defun amarok-clear-playlist ()
-  "Clear Amarok playlist."
+(defun amarok-shuffle ()
+  "Shuffle songs in Amarok."
   (interactive)
-  (shell-command
-   (format "dcop amarok playlist clearPlaylist")))
+  (amarok-tracklist "org.freedesktop.MediaPlayer.SetRandom true"))
+
+(defun amarok-next ()
+  "Play next song in Amarok."
+  (interactive)
+  (amarok-player "org.freedesktop.MediaPlayer.Next"))
 
 (defun amarok-play ()
   "Start playback in Amarok."
@@ -85,6 +90,11 @@
   (shell-command
    (format "qdbus org.kde.amarok /Player %s" command)))
 
+(defun amarok-tracklist (command)
+  "Send COMMAND to Amarok player."
+  (shell-command
+   (format "qdbus org.kde.amarok /Tracklist %s" command)))
+
 (defun amarok-setup-dired-key-bindings ()
   "Setup convenient bindings for Amarok in dired.
 
@@ -96,7 +106,6 @@ C-c a a - Add marked files to playlist
 C-c a . - Play current file"
   (interactive)
   (define-key dired-mode-map (kbd "C-c a p") 'amarok-play-pause)
-  (define-key dired-mode-map (kbd "C-c a c") 'amarok-clear-playlist)
   (define-key dired-mode-map (kbd "C-c a a") 'amarok-dired-add-files)
   (define-key dired-mode-map (kbd "C-c a .") 'amarok-dired-play-current-file))
 
