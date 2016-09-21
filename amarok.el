@@ -1,10 +1,11 @@
 ;;; amarok.el --- Simple interface to Amarok music player
 ;;
-;; Copyright (C) 2006 Mathias Dahl
+;; Copyright (C) 2006 Mathias Dahl, 2016 Vasilis Spilka
 ;;
 ;; Version: 0.1
 ;; Keywords: multimedia
-;; Author: Mathias Dahl <mathias.rem0veth1s.dahl@gmail.com>
+;; Original Author: Mathias Dahl <mathias.rem0veth1s.dahl@gmail.com>
+;; Contributor: Vasilis Spilka <vasspilka@gmail.com>
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -67,22 +68,22 @@
 (defun amarok-play ()
   "Start playback in Amarok."
   (interactive)
-  (amarok-player "play"))
+  (amarok-player "org.freedesktop.MediaPlayer.Play"))
 
 (defun amarok-pause ()
   "Pause playback in Amarok."
   (interactive)
-  (amarok-player "pause"))
+  (amarok-player "org.freedesktop.MediaPlayer.Pause"))
 
 (defun amarok-play-pause ()
   "Toggle play/pause in Amarok."
   (interactive)
-  (amarok-player "playPause"))
+  (amarok-player "org.freedesktop.MediaPlayer.PlayPause"))
 
 (defun amarok-player (command)
   "Send COMMAND to Amarok player."
   (shell-command
-   (format "dcop amarok player %s" command)))
+   (format "qdbus org.kde.amarok /Player %s" command)))
 
 (defun amarok-setup-dired-key-bindings ()
   "Setup convenient bindings for Amarok in dired.
@@ -102,3 +103,4 @@ C-c a . - Play current file"
 (provide 'amarok)
 
 ;;; amarok.el ends here
+
